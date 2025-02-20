@@ -19,8 +19,6 @@ def establish_type(path):
     else:
         return "NONE", "NONE"
 
-jsonfile = []
-
 class File:
     def __init__(self, path):
         self.path=path
@@ -31,6 +29,7 @@ class Directory(File):
         super().__init__(path)
         self.summary = summary
         self.content, self.dir=self.get_content()
+        self.jsonfile = self.get_json()
         pass
 
     def is_file_valid(self, path):
@@ -62,10 +61,11 @@ class Directory(File):
     
     def get_json(self):
         for c in self.content:
-            jsonfile.append(c.to_json())
+            self.jsonfile.append(c.to_json())
         for d in self.dir:
             d.get_json()
-        return jsonfile
+    
+
 
 
 class Readables(File):
@@ -87,8 +87,13 @@ class Readables(File):
 def jsonize(path):
     summary = Summary()
     test = Directory(path, summary)
-    jsonfile = []
-    jsonlist = json.dumps(test.get_json(), indent=2)
+    jsonlist = json.dumps(test.jsonfile, indent=2)
     print(jsonlist)
     with open('test.json', 'w') as fout:
-        json.dump(test.get_json(), fout, indent=2)
+        json.dump(test.jsonfile, fout, indent=2)
+
+def vectorize(path):
+    summary = Summary()
+    test = Directory(path, summary)
+    test.content
+    vectorfile = []

@@ -1,0 +1,62 @@
+
+#===============
+dexter.lsw@gmail.com  password DDw566831, *啟動OpenAI
+  *google     username Dexter Wang, password jennndexterb  
+  *sketchfab  username DexterWang,  password jennndexterb
+
+
+  ChatGPT,ollama.com
+  invideo AI,Dexter's Workspace   # AI製短片
+  PowerDirector                   # 另加password jennnDexter      
+  clipchamp                       # 另加password jennnDexter
+  civitai                           username dexterlsw217 
+  PronptHero.com                  # username DexterWang, password jennnDexter
+
+
+
+# WSL Linus
+dexterwang  username
+jennndexter password
+
+#===============
+#NVIDIA 
+Email dexter@syscomach.com.tw
+password JennnDexter1
+
+#Github, Anaconda, 
+Email dexter@syscomach.com.tw
+#jennndexter   username(account)
+#jennndexter1  password
+
+#Hugging Face
+dexter@syscomach.com.tw         
+Dexter Wang
+JennnDexter1 password
+#曾建過,但沒使用,參考"C:\SyscoSoft\3_SyscoPY\0_基礎安裝\02_登錄.docx"
+dexter.lsw@gmail.com
+JennnDexter1  username(account)
+DexterWang   fullname
+JennnDexter1 password
+
+
+
+# Kaggle
+jennndexter    username  
+#jennndexter1  password???
+
+#reddit
+google dexter.lsw@gmail.com
+JennnDexter_a username
+
+//=== Install anaconda ===
+0.解除安裝. 電腦設定->應用程式->搜尋->點該程式->解除安裝
+1.搜尋how to install anaconda     // 用英文才會正確
+2.download anaconda installer 
+3.點Anaconda3-2023.03-Windows-x86_64.exe安裝
+
+==== 其他資訊 ========================================= 
+安装gensim
+打开anaconda，找到想要安装的环境，选择Not installed选项，搜索gensim。选中后Apply。
+
+
+

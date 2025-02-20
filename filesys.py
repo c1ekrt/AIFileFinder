@@ -94,9 +94,12 @@ def jsonize(path):
     print(jsonlist)
     with open('test.json', 'w') as fout:
         json.dump(test.jsonfile, fout, indent=2)
+<<<<<<< Updated upstream
 
 def vectorize(path):
     summary = Summary()
     test = Directory(path, summary)
     test.content
     vectorfile = []
+=======
+>>>>>>> Stashed changes

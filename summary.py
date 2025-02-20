@@ -1,4 +1,5 @@
 import transformers
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 from transformers import pipeline
 from langchain_community.document_loaders.word_document import UnstructuredWordDocumentLoader
@@ -15,8 +16,8 @@ FILE_LOADER_MAPPING = {
 class Summary:
 
     def __init__(self):
-        self.model = self.pre_doc_summary()
-
+        self.model, self.tokenizer = self.pre_doc_summary()
+        self.device = "cuda"
     # def pre_img_summary():
     #     MODEL = "deepseek-ai/Janus-1.3B"
     #     vl_chat_processor: VLChatProcessor = VLChatProcessor.from_pretrained(MODEL)
@@ -30,13 +31,9 @@ class Summary:
     def pre_doc_summary(self):
         # MODEL = "lianghsun/Llama-3.2-Taiwan-3B"
         MODEL ="meta-llama/Llama-3.2-1B-Instruct"
-        pipe = pipeline(
-            "text-generation",
-            model=MODEL,
-            torch_dtype=torch.bfloat16,
-            device_map="auto",
-        )
-        return pipe
+        tokenizer = AutoTokenizer.from_pretrained(MODEL)
+        model = AutoModelForCausalLM.from_pretrained(MODEL)
+        return model, tokenizer
 
     def summarize(self, path, filetype, doctype):
         summary = ""
@@ -82,12 +79,11 @@ class Summary:
 
 
     def summarize_doc(self, pipe, path, filetype):
-        print(path) 
         loader_class, loader_args = FILE_LOADER_MAPPING[filetype]
         loader = loader_class(path, **loader_args)
 
-        prompt = f"請你摘要上述文字內容，請不要超過100個字:{loader.load()}"
-        message = [
+        prompt = f"請使用繁體中文摘要上述文字內容，盡量不要超過100個字:{loader.load()}"
+        messages = [
                         {
                     "role": "system",
                     "content": "你是個文書助理，你接下來會摘要一個文件，請將文件的內容簡潔且扼要的摘錄到回答當中，內容請務必要精確，請跳過看起來像代碼的部分",
@@ -98,10 +94,13 @@ class Summary:
                     }
                 ]
 
-        outputs = pipe(
-            message,
-            max_new_tokens=128,
-        )
-        print(outputs[0]["generated_text"][-1]['content'])
-        return outputs[0]["generated_text"][-1]['content']
+        encodeds = self.tokenizer.apply_chat_template(messages, return_tensors="pt")
+        model_inputs = encodeds.to(self.device)
+        self.model.to(self.device)
+
+        generated_ids = self.model.generate(model_inputs, max_new_tokens=100, do_sample=True)
+        decoded = self.tokenizer.batch_decode(generated_ids)
+
+        print(decoded[0])
+        return decoded[0]
         

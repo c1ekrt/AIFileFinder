@@ -4,10 +4,6 @@ from transformers import pipeline
 from langchain_community.document_loaders.word_document import UnstructuredWordDocumentLoader
 from langchain_community.document_loaders import UnstructuredMarkdownLoader, PyPDFLoader, TextLoader
 
-from janus.models import MultiModalityCausalLM, VLChatProcessor
-from janus.utils.io import load_pil_images
-
-
 FILE_LOADER_MAPPING = {
     "doc": (UnstructuredWordDocumentLoader, {}),
     "docx": (UnstructuredWordDocumentLoader, {}),
@@ -33,7 +29,7 @@ class Summary:
 
     def pre_doc_summary(self):
         # MODEL = "lianghsun/Llama-3.2-Taiwan-3B"
-        MODEL ="meta-llama/Llama-3.2-3B-Instruct"
+        MODEL ="meta-llama/Llama-3.2-1B-Instruct"
         pipe = pipeline(
             "text-generation",
             model=MODEL,

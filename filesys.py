@@ -4,9 +4,11 @@ import json
 from summary import Summary
 import platform
 
+# image not implement yet
 image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp'}
 text_extensions = {'.txt', '.md', '.docx', '.doc', '.pdf', '.xls', '.xlsx'}
-# tested
+
+# identify file type
 def establish_type(path):
     if os.path.isdir(path):
         return "dir", "dir"
@@ -19,6 +21,7 @@ def establish_type(path):
     else:
         return "NONE", "NONE"
 
+# file structure
 class File:
     def __init__(self, path):
         self.path=path
@@ -29,7 +32,7 @@ class Directory(File):
         super().__init__(path)
         self.summary = summary
         self.content, self.dir=self.get_content()
-        self.jsonfile = self.get_json()
+        self.jsonfile = []
         pass
 
     def is_file_valid(self, path):
@@ -63,7 +66,7 @@ class Directory(File):
         for c in self.content:
             self.jsonfile.append(c.to_json())
         for d in self.dir:
-            d.get_json()
+            self.jsonfile.append(d.jsonfile)
     
 
 

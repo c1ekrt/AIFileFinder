@@ -3,6 +3,9 @@ import os
 import json 
 from summary import Summary
 import platform
+from langchain_core.documents import Document
+
+from langchain_core.pydantic_v1 import BaseModel, Field
 
 # image not implement yet
 image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp'}
@@ -32,15 +35,12 @@ class Directory(File):
         super().__init__(path)
         self.summary = summary
         self.content, self.dir=self.get_content()
-        self.jsonfile = []
+        self.jsonfile = self.get_json()
         pass
 
     def is_file_valid(self, path):
-        print(path)
         file_name_tag = path.rfind("/") if path.rfind("\\") == -1 else path.rfind("\\")
-        print(file_name_tag)
         doc_name = path[file_name_tag+1:]
-        print(doc_name)
         if os.path.isfile(path) and doc_name[0] != "~":
             return True
         else:
@@ -52,7 +52,6 @@ class Directory(File):
         dir = [os.path.join(self.path, file) for file in data if os.path.isdir(os.path.join(self.path, file))]
         output_content = []
         output_dir = []
-        
         for c in content:
             filetype, doctype = establish_type(c)
             if filetype == "NONE":
@@ -63,20 +62,19 @@ class Directory(File):
         return output_content, output_dir
     
     def get_json(self):
+        jsonfile = []
         for c in self.content:
-            self.jsonfile.append(c.to_json())
+            jsonfile.append(c.to_json())
         for d in self.dir:
-            self.jsonfile.append(d.jsonfile)
-    
-
-
+            jsonfile += d.jsonfile
+        return jsonfile
 
 class Readables(File):
     def __init__(self, path, filetype, doctype, summary):
         super().__init__(path)
         self.filetype = filetype
         self.doctype = doctype
-        self.summary = summary.summarize(path, filetype, doctype)
+        self.summary = summary.summarize(path=path, filetype=filetype, doctype=doctype)
 
     def to_json(self):
         output = {
@@ -87,19 +85,14 @@ class Readables(File):
         }
         return output
 
-def jsonize(path):
-    summary = Summary()
-    test = Directory(path, summary)
-    jsonlist = json.dumps(test.jsonfile, indent=2)
-    print(jsonlist)
-    with open('test.json', 'w') as fout:
-        json.dump(test.jsonfile, fout, indent=2)
-<<<<<<< Updated upstream
+# Define state for application
+
 
 def vectorize(path):
     summary = Summary()
     test = Directory(path, summary)
-    test.content
-    vectorfile = []
-=======
->>>>>>> Stashed changes
+    output = []
+    for jf in test.jsonfile:
+        output.append(Document(page_content=jf[summary], metadata={"source":jf[path]}))
+
+

@@ -1,1 +1,3 @@
 *.json
+chroma/chroma.sqlite3
+chroma_langchain_db/chroma.sqlite3

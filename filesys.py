@@ -4,8 +4,21 @@ import json
 from summary import Summary
 import platform
 from langchain_core.documents import Document
-
+import hashlib
 from langchain_core.pydantic_v1 import BaseModel, Field
+
+from langchain_community.document_loaders.word_document import UnstructuredWordDocumentLoader
+from langchain_community.document_loaders import UnstructuredMarkdownLoader, PyPDFLoader, TextLoader
+
+from util import to_checksum
+
+FILE_LOADER_MAPPING = {
+    "doc": (UnstructuredWordDocumentLoader, {}),
+    "docx": (UnstructuredWordDocumentLoader, {}),
+    "md": (UnstructuredMarkdownLoader, {}),
+    "pdf": (PyPDFLoader, {}),
+    "txt": (TextLoader, {"encoding": "utf8"}),
+}
 
 # image not implement yet
 image_extensions = {'.png', '.jpg', '.jpeg', '.gif', '.bmp'}
@@ -68,25 +81,30 @@ class Directory(File):
         for d in self.dir:
             jsonfile += d.jsonfile
         return jsonfile
+    
+    def jsonize(self, filename):
+        with open(f'{filename}.json', 'w') as fout:
+            json.dump(self.jsonfile, fout, indent=2)
 
 class Readables(File):
     def __init__(self, path, filetype, doctype, summary):
         super().__init__(path)
+        self.loader_class, self.loader_args = FILE_LOADER_MAPPING[doctype]
         self.filetype = filetype
         self.doctype = doctype
         self.summary = summary.summarize(path=path, filetype=filetype, doctype=doctype)
+        loader = self.loader_class(path, **self.loader_args)
+        self.checksum = to_checksum(loader)
 
     def to_json(self):
         output = {
             "path":self.path,
             "filetype":self.filetype,
             "doctype":self.doctype,
-            "summary":self.summary
+            "summary":self.summary,
+            "checksum":self.checksum
         }
         return output
-
-# Define state for application
-
 
 def vectorize(path):
     summary = Summary()

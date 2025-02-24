@@ -12,6 +12,11 @@ import filesys
 from filesys import Directory, File, Readables
 from summary import Summary
 
+'''
+Disclaimer: There is no way to detect file transferring by auto scanning
+'''
+
+
 class Vectordb():
     def __init__(self):
         self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-mpnet-base-v2")
@@ -37,24 +42,28 @@ class Vectordb():
         pass
 
     def import_document(self, dir:Directory):
-        
         for file in dir.jsonfile:
-            print(type(file))
             if  file["path"] not in self.path2id:
-                self.path2id[path] = self.available_id[0]
+                self.path2id[file["path"]] = self.available_id[0]
                 self.available_id = self.available_id[1:]
-                self.vectorize_file()
-            else:
+                self.vectorize_file(file)
+            else:   # handle duplication, error tolerance
                 self.modify_file()
 
-
-    def vectorize_file(self):
+    def vectorize_file(self, file):
+        d = Document(
+            page_content=file["summary"],
+            metadata={"source":file["path"]},
+            id = self.path2id[file["path"]]
+        )
+        uuids = str(uuid4())
+        self.vector_store.add_documents(documents=[d], ids=uuids)
         pass
 
-    def modify_file(self):
+    def modify_file(self, file):
         pass
 
-    def delete_file(self):
+    def modify_dir(self, dir):
         pass
 
 
@@ -63,4 +72,4 @@ summary = Summary()
 path = r"testmanual"
 dir = Directory(path, summary)
 DB.import_document(dir)
-# print(DB.path2id)
+print(DB.path2id)

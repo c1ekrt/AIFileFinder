@@ -31,7 +31,7 @@ def establish_type(path):
     index = path.rfind('.')
 
     if path[index:] in image_extensions:
-        return "image", path[index+1:]
+        return "image", "NONE"
     elif path[index:] in text_extensions:
         return "text", path[index+1:]
     else:
@@ -67,7 +67,7 @@ class Directory(File):
         output_dir = []
         for c in content:
             filetype, doctype = establish_type(c)
-            if filetype == "NONE":
+            if filetype == "NONE" or filetype == "image":
                 continue
             output_content.append(Readables(c, filetype, doctype, self.summary))
         for d in dir:
@@ -83,7 +83,7 @@ class Directory(File):
         return jsonfile
     
     def jsonize(self, filename):
-        with open(f'{filename}.json', 'w') as fout:
+        with open(f'{filename}.json', 'w', encoding='utf-8') as fout:
             json.dump(self.jsonfile, fout, indent=2)
 
 class Readables(File):

@@ -4,3 +4,5 @@ chroma_langchain_db/chroma.sqlite3
 /chroma_langchain_db
 /__pycache__
 /__pycache__
+/__pycache__
+/testmanual

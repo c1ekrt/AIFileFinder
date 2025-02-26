@@ -6,4 +6,3 @@ summary = Summary()
 d = Directory(test_path, summary)
 print(d.jsonfile[0])
 d.jsonize("test")
-

@@ -102,5 +102,5 @@ class Summary:
         decoded = self.tokenizer.batch_decode(generated_ids)
         pos = decoded[0].find("page_content=")
 
-        return decoded[0][pos+13:]
+        return decoded[0][pos+13:]+f" source: {path}"
         

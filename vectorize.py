@@ -26,11 +26,12 @@ Disclaimer: There is no way to detect file transferring by auto scanning
 class State(TypedDict):
     question: str
     context: List[Document]
+    source: List[str]
     answer: str
 
 class Vectordb():
     def __init__(self):
-        model_name = "BAAI/bge-large-zh-v1.5"
+        model_name = "BAAI/bge-m3"
         model_kwargs = {"device": "cuda"}
         encode_kwargs = {"normalize_embeddings": True}
         self.embeddings = HuggingFaceBgeEmbeddings(model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs)
@@ -108,7 +109,7 @@ class Vectordb():
         # Define application steps
 
         retrieved_docs = self.vector_store.similarity_search(state["question"])
-        return {"context": retrieved_docs}
+        return {"context": retrieved_docs, "source":[path.metadata for path in retrieved_docs] }
         pass
 
     
@@ -119,16 +120,19 @@ class Vectordb():
         return {"answer": response.content}
 
 
-DB = Vectordb()
-summary = Summary()
-path = r"testmanual"
-dir = Directory(path, summary)
-DB.import_document(dir)
-graph_builder = StateGraph(State).add_sequence([DB.retrieve, DB.generate])
-graph_builder.add_edge(START, "retrieve")
-graph = graph_builder.compile()
 
-result = graph.invoke({"question": "請幫我在提供資料的範圍內尋找有關生成式建模的資料"})
+def search(path):
+    DB = Vectordb()
+    summary = Summary()
+    dir = Directory(path, summary)
+    DB.import_document(dir)
 
-print(f'Context: {result["context"]}\n\n')
-print(f'Answer: {result["answer"]}')
+    graph_builder = StateGraph(State).add_sequence([DB.retrieve, DB.generate])
+    graph_builder.add_edge(START, "retrieve")
+    graph = graph_builder.compile()
+
+    result = graph.invoke({"question": "請幫我在context提供資料的範圍內尋找有關Blender的資料, 如果相關請將文件結尾 source 的路徑作為答案"})
+
+    print(f'Context: {result["source"]}\n\n')
+    print(f'Answer: {result["answer"][0]}')
+    pass

@@ -1,9 +1,40 @@
 import gradio as gr
 from tkinter import Tk, filedialog
+import pandas as pd
 
 from summary import Summary
-from vectorize import Vectordb
+from vectorize import Vectordb, search
 from filesys import Directory, Readables
+from util import json2dataframe
+
+class MainApp():
+
+    def __init__(self, DB:Vectordb, dir:Directory):
+        self.DB = DB
+        self.dir = dir
+
+    def import_json(self, jsn):
+        pass
+
+    def search_file(self, prompt):
+        answer = search(path=self.dir.path, prompt=prompt)
+        df = pd.DataFrame(answer)
+        return df
+
+
+# gradio has no clean ui for folder path submission vvv
+
+def open_folder(path):
+    DB, dir = call_main(path)
+    return MainApp(DB, dir)
+    pass
+
+def call_main(path):
+    DB = Vectordb()
+    summary = Summary()
+    dir = Directory(path, summary)
+    DB.import_document(dir)
+    return DB, dir
 
 def get_folder_path(folder_path: str = "") -> str:
     """
@@ -58,29 +89,23 @@ def create_folder_ui(path="./"):
     )
 
     return text_box, button
-
-def call_main(path):
-    DB = Vectordb()
-    summary = Summary()
-    dir = Directory(path, summary)
-    DB.import_document(dir)
-
-def import_json(json):
-    pass
-
-def open_flie():
-    pass
+# gradio has no clean ui for folder path submission ^^^
 
 def interface():
-    with gr.Blocks() as demo:
+    with gr.Blocks() as folder_upload:
         with gr.Row():
             with gr.Column():
                 text_box = create_folder_ui()
                 btn = gr.Button()
-                json = gr.File()
-                json_btn = gr.Button()
+        
+    with gr.Blocks() as prompt_and_search:
+        with gr.Row():
+            with gr.Column():
+                # jsn = gr.File(value="import a json file")
+                # json_btn = gr.Button()
+                prompt = gr.Textbox(value="Type something related to the file")
             with gr.Column():
                 data = gr.Dataframe()
-        
-        btn.click()
+    demo = gr.TabbedInterface(interface_list=[folder_upload, prompt_and_search], tab_names=["folder_upload", "prompt_and_search"])
+    btn.click(fn=open_folder, inputs=[text_box], outputs=[data])
     demo.launch()

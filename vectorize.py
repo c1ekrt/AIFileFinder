@@ -121,7 +121,7 @@ class Vectordb():
 
 
 
-def search(path):
+def search(path, prompt):
     DB = Vectordb()
     summary = Summary()
     dir = Directory(path, summary)
@@ -131,8 +131,9 @@ def search(path):
     graph_builder.add_edge(START, "retrieve")
     graph = graph_builder.compile()
 
-    result = graph.invoke({"question": "請幫我在context提供資料的範圍內尋找有關Blender的資料, 如果相關請將文件結尾 source 的路徑作為答案"})
+    result = graph.invoke({"question": f"請幫我在context提供資料的範圍內尋找有關{prompt}的資料, 如果相關請將文件結尾 source 的路徑作為答案"})
 
     print(f'Context: {result["source"]}\n\n')
     print(f'Answer: {result["answer"][0]}')
+    return result["source"]
     pass

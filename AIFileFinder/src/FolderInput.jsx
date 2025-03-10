@@ -1,26 +1,39 @@
 import './FolderInput.css'
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function FolderInput(){
-    function HandleSubmit(e){
-        // Prevent the browser from reloading the page
+    let navigate = useNavigate();
+    async function HandleSubmit(e){
         e.preventDefault();
-        // Read the form data
         const form = e.target;
         const formData = new FormData(form);
-        
-        // You can work with it as a plain object:
         const formJson = Object.fromEntries(formData.entries());
+        console.info(formJson);
+        
+
     }
+    async function handleClick (){
+        navigate("/finder");
+    }
+
     return(
         <div>
             <form method="post" onSubmit={HandleSubmit}>
                 <label>
-                    Folder Path: <input name="folder_path" defaultValue="D:\\" />
+                    Folder Path: <input name="path" defaultValue="D:\\" />
                 </label>
                 <hr />
-                <button type="submit">Submit</button>
+                
+                <button type="submit" onClick={handleClick}>Submit</button>
             </form>
+            <div>
+                <hr />
+                <button onClick={handleClick} type="button" value="submit"/>
+            </div>
         </div>
+
+        
 
     );
 }

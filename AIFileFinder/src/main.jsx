@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route index path="/main" element={<><App /><FolderInput /></>}/>
+        <Route index path="/" element={<><App /><FolderInput /></>}/>
         <Route path="/finder" element={<FileFinder />}/>
       </Routes>
     </BrowserRouter>

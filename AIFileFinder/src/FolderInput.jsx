@@ -1,36 +1,41 @@
 import './FolderInput.css'
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+// https://stackoverflow.com/questions/75649339/sending-form-data-from-react-to-flask-server
 export default function FolderInput(){
     let navigate = useNavigate();
+    let input = ''
     async function HandleSubmit(e){
         e.preventDefault();
         const form = e.target;
-        const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries());
-        console.info(formJson);
-        
+        const path = form.path.value
+
+        let formData = new FormData();
+        formData.append('path', path)
+        await sendFormData(formData)
 
     }
-    async function handleClick (){
+
+    async function sendFormData(formData){
+        const url = "http://127.0.0.1:5000/";
+        let response = await fetch(url, {
+            method: 'POST',
+            body: formData
+          }).then((response) => response.json());
+        console.log(response)
         navigate("/finder");
     }
 
     return(
         <div>
-            <form method="post" onSubmit={HandleSubmit}>
+            <form method="get" onSubmit={HandleSubmit}>
                 <label>
-                    Folder Path: <input name="path" defaultValue="D:\\" />
+                    Folder Path: <input id="path" name="path" defaultValue="D:\" />
                 </label>
                 <hr />
                 
-                <button type="submit" onClick={handleClick}>Submit</button>
+                <button type="submit" >Submit</button>
             </form>
-            <div>
-                <hr />
-                <button onClick={handleClick} type="button" value="submit"/>
-            </div>
         </div>
 
         

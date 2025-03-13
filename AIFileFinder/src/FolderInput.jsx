@@ -3,27 +3,40 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // https://stackoverflow.com/questions/75649339/sending-form-data-from-react-to-flask-server
 export default function FolderInput(){
+    let [filecount, setFilecount] = useState(0)
+    // let [processed, setProcessed] = useState(0)
+    const url = "http://127.0.0.1:5000/";
+    const file_count_url = "http://127.0.0.1:5000/filecount"   
     let navigate = useNavigate();
-    let input = ''
     async function HandleSubmit(e){
         e.preventDefault();
         const form = e.target;
         const path = form.path.value
 
         let formData = new FormData();
-        formData.append('path', path)
-        await sendFormData(formData)
+        formData.append('path', path);
+        await sendFileData(formData);
+        await sendFormData(formData);
 
     }
 
     async function sendFormData(formData){
-        const url = "http://127.0.0.1:5000/";
         let response = await fetch(url, {
-            method: 'POST',
+            method: 'POST', 
             body: formData
           }).then((response) => response.json());
         console.log(response)
         navigate("/finder");
+        
+    }
+
+    async function sendFileData(formData){
+        let response = await fetch(file_count_url, {
+            method: 'POST',
+            body: formData
+        }).then((response) => response.json());
+        console.log(response)
+        setFilecount(response["filecount"])
     }
 
     return(
@@ -36,6 +49,13 @@ export default function FolderInput(){
                 
                 <button type="submit" >Submit</button>
             </form>
+            <div id="Progress_Status">
+            <div id="myprogressBar"></div>
+            </div>
+            <h3>偵測到 {filecount} 個檔案 </h3>
+            <h3>每個檔案的處理時間約為 1-2秒</h3>
+            <h3>預估處理時間為 {filecount * 1.5} 秒</h3>
+            <h3>完成處理後會自動跳轉</h3>
         </div>
 
         

@@ -1,6 +1,7 @@
 import gradio as gr
 from tkinter import Tk, filedialog
 import pandas as pd
+import os
 
 from summary import Summary
 from vectorize import Vectordb, search

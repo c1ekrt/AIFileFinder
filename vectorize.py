@@ -1,13 +1,8 @@
-from langchain_community.document_loaders import TextLoader
-from langchain_text_splitters import CharacterTextSplitter
 from langchain_chroma import Chroma
-from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_core.documents import Document
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_community.chat_models import ChatOllama
 from langchain_core.prompts import PromptTemplate
-from langchain import hub
 from langchain_core.prompts import PromptTemplate
 
 from langgraph.graph import START, StateGraph

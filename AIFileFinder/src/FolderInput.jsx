@@ -6,7 +6,7 @@ export default function FolderInput(){
     let [filecount, setFilecount] = useState(0)
     // let [processed, setProcessed] = useState(0)
     const url = "http://127.0.0.1:5000/";
-    const file_count_url = "http://127.0.0.1:5000/filecount"   
+    const file_count_url = "http://127.0.0.1:5000/filecount"  ;
     let navigate = useNavigate();
     async function HandleSubmit(e){
         e.preventDefault();
@@ -53,8 +53,8 @@ export default function FolderInput(){
             <div id="myprogressBar"></div>
             </div>
             <h3>偵測到 {filecount} 個檔案 </h3>
-            <h3>每個檔案的處理時間約為 1-2秒</h3>
-            <h3>預估處理時間為 {filecount * 1.5} 秒</h3>
+            <h3>每個檔案的處理時間約為 2 秒</h3>
+            <h3>預估處理時間為 {filecount * 2 + 10} 秒</h3>
             <h3>完成處理後會自動跳轉</h3>
         </div>
 

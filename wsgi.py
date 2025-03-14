@@ -40,13 +40,15 @@ def get_data():
 @app.route('/finder', methods=['GET', 'POST'])
 def get_prompt():
     data = request.form.get("prompt")
+    print(data)
     ds.prompt = data
-    if data != None:
-        try:
-            return mainapp.search_file(data)
-        except:
-            print("path is not defined or found")
-            return 
+    response = ds.dir.search_file(ds.prompt)
+    print(response["source"])
+    result = {
+        "response": response["source"].tolist(),
+    }
+    return result
+
     
 @app.route('/filecount', methods=['GET', 'POST'])
 def get_filecount():

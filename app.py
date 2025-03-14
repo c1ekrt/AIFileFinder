@@ -18,7 +18,7 @@ class MainApp():
         pass
 
     def search_file(self, prompt):
-        answer = search(path=self.dir.path, prompt=prompt)
+        answer = search(DB=self.DB, prompt=prompt)
         df = pd.DataFrame(answer)
         return df
 

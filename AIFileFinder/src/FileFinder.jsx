@@ -6,29 +6,36 @@ import { BrowserRouter } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
 
-function FileFinder(){
+export default function FileFinder(){
   const [data, setData] = useState("請描述你要找的檔案");
+  const [response, setResponse] = useState(["檔案"]);
+  const listItems = response.map(item =>
+    <li>{item}</li>
+  );
   const url = "http://127.0.0.1:5000/finder";
     async function onSubmit(e){
-      // 點擊觸發API
+
       e.preventDefault();
       const form = e.target;
       let formData = new FormData();
       const prompt = form.prompt.value
+      console.log(prompt)
       formData.append("prompt", prompt)
-      console.log(input)
-      setData(input["prompt"])
+      setData(prompt)
+      let file = await sendFormData(formData)
+      console.log(file)
+      setResponse(file)
     }
 
     async function sendFormData(formData){
       
       let response = await fetch(url, {
-          method: 'POST',
-          body: formData
-        }).then((response) => response.json());
+        method: 'POST', 
+        body: formData
+      }).then((response) => response.json());
       console.log(response)
-
-  }
+        return response["response"]
+    }
 
     return(
       <div>
@@ -42,15 +49,12 @@ function FileFinder(){
               <button type="submit" >Submit</button>
           </form>
           <hr />
-          <h3> {data} </h3>
+          <h3> 正在查找 {data} 相關的資料 </h3>
         </div>
         <div>
-          <li>
-
-          </li>
+          <ul>{listItems}</ul>;
         </div>
       </div>
       
     )
 }
-export default FileFinder;

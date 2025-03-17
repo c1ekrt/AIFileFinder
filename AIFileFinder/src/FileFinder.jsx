@@ -11,7 +11,7 @@ export default function FileFinder(){
   const [response, setResponse] = useState(["檔案"]);
   const [folder, setFolder] = useState(["未偵測到資料夾"])
   const listItems = response.map(item =>
-    <li>{item}</li>
+    <td>{item}</td>
   );
 
   const url = "http://127.0.0.1:5000/finder";
@@ -67,8 +67,18 @@ export default function FileFinder(){
         <h3>目前選取的資料夾： {folder}</h3>
         <h3 class="search_result"> 正在查找 {data} 相關的資料 </h3>
       </div>
+      <div class="empty_middle">
+
+      </div>
       <div class="interface">
-        <ul>{listItems}</ul>;
+        <table >
+          <tr>
+            <th>Relevent File</th>
+          </tr>
+          <tr>
+            {listItems}
+          </tr>
+        </table>
       </div>
     </div>
     

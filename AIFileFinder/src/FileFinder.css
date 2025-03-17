@@ -17,6 +17,12 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+table, th, td{
+  border: 1px solid;
+  display:block;
+  min-width: 500px;
+}
+
 .search_result {
     background-color: #88e7f8;
     font-size: large;
@@ -25,3 +31,11 @@ button:focus-visible {
 .interface {
   display: inline-block;
 }
+
+.empty_middle{
+  display: inline-block;
+  min-width: 20px;
+  min-height: 120px;
+  border-left-color: aqua;
+}
+

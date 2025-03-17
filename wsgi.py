@@ -37,6 +37,13 @@ def get_data():
     }
     return result
 
+@app.route('/current_folder', methods=['GET','POST'])
+def get_folder():
+    result = {
+        "path": ds.path,
+    }
+    return result
+
 @app.route('/finder', methods=['GET', 'POST'])
 def get_prompt():
     data = request.form.get("prompt")

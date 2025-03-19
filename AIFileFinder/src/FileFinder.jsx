@@ -71,7 +71,7 @@ export default function FileFinder(){
 
       </div>
       <div class="interface">
-        <table >
+        <table>
           <tr>
             <th>Relevent File</th>
           </tr>

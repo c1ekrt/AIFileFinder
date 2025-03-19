@@ -43,12 +43,11 @@ export default function FolderInput(){
 
     return(
         <div>
+            <h3>請手動複製欲掃描資料夾的絕對路徑</h3>
+            <hr />
             <form method="get" onSubmit={HandleSubmit}>
-                <label>
-                    Folder Path: <input id="path" name="path" defaultValue="D:\" />
-                </label>
+                Folder Path: <input id="path" name="path" defaultValue="D:\" />
                 <hr />
-                
                 <button type="submit" >Submit</button>
             </form>
             <div id="Progress_Status">

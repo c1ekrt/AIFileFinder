@@ -22,9 +22,6 @@ class MainApp():
         df = pd.DataFrame(answer)
         return df
 
-
-# gradio has no clean ui for folder path submission vvv
-
 def open_folder(path):
     DB, dir = call_main(path)
     return MainApp(DB, dir)

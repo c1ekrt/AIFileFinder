@@ -34,8 +34,10 @@ export default function FileFinder(){
     const form = e.target;
     let formData = new FormData();
     const prompt = form.prompt.value;
+    const count = form.count.value;
     console.log(prompt);
     formData.append("prompt", prompt);
+    formData.append("count", count);
     setData(prompt);
     let file = await sendFormData(formData);
     console.log(file);
@@ -58,6 +60,10 @@ export default function FileFinder(){
         <form method="post" onSubmit={onSubmit} >
             <label>
                 File Description: <input name="prompt" defaultValue="請描述你要找的檔案"/>
+            </label>
+            <hr />
+            <label>
+                查找相關資料數量: <input name="count" type="number" defaultValue="3" />
             </label>
             <hr />
             

@@ -17,8 +17,8 @@ class MainApp():
     def import_json(self, jsn):
         pass
 
-    def search_file(self, prompt):
-        answer = search(DB=self.DB, prompt=prompt)
+    def search_file(self, prompt, count):
+        answer = search(DB=self.DB, prompt=prompt, count=count)
         df = pd.DataFrame(answer)
         return df
 

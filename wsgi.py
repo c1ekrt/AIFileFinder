@@ -47,9 +47,12 @@ def get_folder():
 @app.route('/finder', methods=['GET', 'POST'])
 def get_prompt():
     data = request.form.get("prompt")
+    count = int(request.form.get("count"))
     print(data)
+    print(count)
+    print(type(count))
     ds.prompt = data
-    response = ds.dir.search_file(ds.prompt)
+    response = ds.dir.search_file(ds.prompt, count)
     print(response["source"])
     result = {
         "response": response["source"].tolist(),

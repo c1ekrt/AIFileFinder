@@ -18,6 +18,9 @@ from summary import Summary
 Disclaimer: There is no way to detect file transferring by auto scanning
 '''
 # Define state for application
+
+file_count = 3
+
 class State(TypedDict):
     question: str
     context: List[Document]
@@ -102,8 +105,8 @@ class Vectordb():
 
     def retrieve(self, state):
         # Define application steps
-
-        retrieved_docs = self.vector_store.similarity_search(state["question"])
+        global file_count
+        retrieved_docs = self.vector_store.similarity_search(state["question"], k=file_count)
         return {"context": retrieved_docs, "source":[path.metadata for path in retrieved_docs] }
         pass
 
@@ -113,6 +116,9 @@ class Vectordb():
         messages = self.prompt.invoke({"question": state["question"], "context": self.content})
         response = self.llm.invoke(messages)
         return {"answer": response.content}
+    
+    def set_file_count(self, count):
+        self.count = count
 
 
 
@@ -133,10 +139,13 @@ def test_search(path, prompt):
     return result["source"]
     pass
 
-def search(DB, prompt):
+def search(DB, prompt, count):
+    
     graph_builder = StateGraph(State).add_sequence([DB.retrieve, DB.generate])
     graph_builder.add_edge(START, "retrieve")
     graph = graph_builder.compile()
+    global file_count 
+    file_count = count
 
     result = graph.invoke({"question": f"請幫我在context提供資料的範圍內尋找有關{prompt}的資料, 如果相關請將文件結尾 source 的路徑作為答案"})
 
